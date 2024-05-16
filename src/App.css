@@ -1,0 +1,10 @@
+.App_messages {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 13px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+div.App {
+  text-align: center;
+}
