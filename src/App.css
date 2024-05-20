@@ -8,3 +8,153 @@
 div.App {
   text-align: center;
 }
+
+.App_items img,.App_items_all img {
+  width: 174px;
+  height: 126px;
+}
+
+.App_items>div,.App_items_all>div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.App_items,.App_items_all {
+  display: grid;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  grid-template-columns: 24% 24% 24% 24%;
+  gap: 10px;
+  justify-content: center;
+}
+
+.App_form_for_add {
+  text-align: center;
+  padding-top: 36px;
+}
+
+.App_form_for_add form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 350px;
+  margin: 0 auto;
+}
+
+.App_form_for_add form input {
+  height: 29px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 22px;
+}
+
+.App_form_for_add form button {
+  font-size: 20px;
+  background: #ff6400;
+  border: none;
+  border-radius: 17px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  color: white;
+  font-weight: bold;
+}
+
+h2.h2_app {
+  text-align: center;
+}
+
+.App_logo img {
+  width: 48px;
+}
+
+header.App_header {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.App_functions {
+  padding-right: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 23px;
+}
+
+.App_logo {
+  padding-left: 20px;
+  padding-top: 8px;
+}
+
+.App_functions button {
+  font-size: 16px;
+  background: white;
+  border: solid 1px black;
+  border-radius: 5px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+
+/*LOGIN PAGE */
+form.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 286px;
+  margin: 0 auto;
+}
+form.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 286px;
+  margin: 0 auto;
+}
+button.login-button {
+  font-size: 23px;
+  background: #1cc91b;
+  border: none;
+  border-radius: 16px;
+  color: white;
+  font-weight: bold;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.App_other a {
+  color: black;
+  font-weight: bold;
+  font-size: 19px;
+}
+h1.App_loginH1 {
+  text-align: center;
+}
+
+.App_other {
+  text-align: center;
+  padding-top: 32px;
+}
+.App_other>div {
+  padding-top: 10px;
+}
+h1.App_loginH1 {
+  margin-top: 100px;
+}
+button.App_form_button_google {
+  background: none;
+  border: solid 1px black;
+  font-size: 17px;
+  border-radius: 16px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+form.login-form input {
+  font-size: 20px;
+}
+/* LOGIN PAGE */

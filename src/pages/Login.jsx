@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react'
-import { auth } from '../firebase';
+import { auth, signInWithGooglePopup } from '../firebase';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 export default function Login() {
@@ -22,9 +22,22 @@ export default function Login() {
 
         }
     }
+
+
+
+    const logGoogleUser = async () => {
+        const response = await signInWithGooglePopup();
+        localStorage.setItem('token',response.user.accessToken);
+        localStorage.setItem('user',JSON.stringify(response.user));
+        navigate("/");
+    }
+
+
+
+
   return (
    <div>
-    <h1>Login page</h1>
+    <h1 className='App_loginH1'>Авторизация</h1>
     <form  className='login-form'>
         <input 
         type='email'
@@ -41,8 +54,14 @@ export default function Login() {
         onChange={(e)=>setPassword(e.target.value)}
         />
         <button onClick={handleSubmit} className='login-button'>Login</button>
-        <div><NavLink to="/signup">Signup</NavLink></div>
+    
     </form>
+    <div className='App_other'>
+    <div><NavLink to="/signup">Signup</NavLink></div>
+        <div>
+            <button className='App_form_button_google' onClick={logGoogleUser}>Sign In With Google</button>
+        </div>
+    </div>
    </div>
   )
 }
