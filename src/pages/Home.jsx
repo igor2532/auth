@@ -85,7 +85,8 @@ export default function Home() {
     await signOut(auth);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/login");
+    navigate("/login"); 
+    
   };
   return (
     <>
