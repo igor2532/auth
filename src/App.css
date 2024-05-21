@@ -185,7 +185,7 @@ form.login-form input {
     text-align: center;
   }
 
-  .App_items_all {
+  div.App_items_all, div.App_items {
     max-width: 1000px;
     margin: 0 auto;
 }
