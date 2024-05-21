@@ -15,7 +15,7 @@ const router = createHashRouter(
  <Route path='/signup' element={!token ?<Signup />:<Home/>}/>
  <Route path='/login' element={!token ?<Login />:<Home />}/>
  <Route path='/' element={<Protected />}>
- <Route path='/' index element={<Home />}/>
+ <Route path='/' index element={<Home />}/> 
  </Route>
  
 
