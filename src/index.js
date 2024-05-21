@@ -11,12 +11,11 @@ import Home from './pages/Home';
 const token = localStorage.getItem('token');
 const router = createBrowserRouter(
   createRoutesFromElements(
-    
-    <Route path='/' element={  <App />}>
- <Route path='signup' element={!token ?<Signup />:<Home/>}/>
- <Route path='login' element={!token ?<Login />:<Home />}/>
- <Route path='/' element={<Protected />}>
- <Route path='/' index element={<Home />}/>
+  <Route path='/auth' element={  <App />}>
+ <Route path='/auth/signup' element={!token ?<Signup />:<Home/>}/>
+ <Route path='/auth/login' element={!token ?<Login />:<Home />}/>
+ <Route path='/auth' element={<Protected />}>
+ <Route path='/auth' index element={<Home />}/>
  </Route>
  
 
