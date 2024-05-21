@@ -86,7 +86,7 @@ export default function Home() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login"); 
-    
+
   };
   return (
     <>
@@ -98,7 +98,7 @@ export default function Home() {
             </div>
             <div className="App_functions">
               <button>Ваш email:{user.email} </button>
-              <button onClick={handleLogout}>Logout</button>
+              <button onClick={handleLogout}>LogoutS</button>
             </div>
           </header>
           <div className="App_form_for_add">
