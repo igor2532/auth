@@ -105,7 +105,7 @@ export default function Home() {
             <form>
               <input
                 onChange={(e) => setValueTitle(e.target.value)}
-                placeholder="Enter title"
+                placeholder="Enter title "
               />
               <input
                 onChange={(e) => setValuePrice(e.target.value)}
