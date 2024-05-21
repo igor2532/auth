@@ -3,19 +3,19 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
+import { Route, RouterProvider, createBrowserRouter, createHashRouter, createRoutesFromElements } from 'react-router-dom';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Protected from './components/Protected';
 import Home from './pages/Home';
 const token = localStorage.getItem('token');
-const router = createBrowserRouter(
+const router = createHashRouter(
   createRoutesFromElements(
-  <Route path='/auth' element={  <App />}>
- <Route path='/auth/signup' element={!token ?<Signup />:<Home/>}/>
- <Route path='/auth/login' element={!token ?<Login />:<Home />}/>
- <Route path='/auth' element={<Protected />}>
- <Route path='/auth' index element={<Home />}/>
+  <Route path='/' element={  <App />}>
+ <Route path='/signup' element={!token ?<Signup />:<Home/>}/>
+ <Route path='/login' element={!token ?<Login />:<Home />}/>
+ <Route path='/' element={<Protected />}>
+ <Route path='/' index element={<Home />}/>
  </Route>
  
 
