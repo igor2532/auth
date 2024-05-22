@@ -53,8 +53,6 @@ export default function Home() {
    async function emailByIdSearch(uid) {
    const getDocMy = await getDoc(doc(getFirestore(), 'users', uid))
   .then((data)=>{
-    // console.log(data.data().email)
-      // setUserEmailValue(data.data().email);
      return data
      })
      return getDocMy;

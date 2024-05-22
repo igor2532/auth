@@ -9,6 +9,8 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  or,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -22,35 +24,57 @@ export default function Chat() {
   const userId = token
     ? doc(getFirestore(), "users", location.state.userId)
     : "";
+
+
   const recipient = token ? doc(getFirestore(), "users", user.uid) : "";
   const handleInfo = async () => {
-    console.log(userId);
-    // console.log(recipient)
+    console.log('userid  '+location.state.userId);
+     console.log('rece  '+user.uid)
     const q = query(
       collection(getFirestore(), "messages"),
-      where("recipient", "==", userId),
-      where("userId", "==", recipient)
+      
+       or(
+        where('recipient', '==',recipient, '&&','userId', '==',userId),
+        where('recipient', '==',userId, '&&','userId', '==',recipient)
+       ),
+      
+      
     );
     const querySnapshot = await getDocs(q);
+    console.log(querySnapshot)
     const myMessages = [];
     querySnapshot.forEach((myDoc) => {
       const obj = myDoc.data();
-      myMessages.push({ ...obj });
-      console.log(obj);
+    
+        myMessages.push({userEmail: location.state.userEmail, ...obj });
+     
+     
+    //   console.log(obj);
     });
     setMessagesArray(myMessages);
+  
   };
+
+
+
   const sendMessage = async (event) => {
     event.preventDefault();
+
     addDoc(collection(getFirestore(), "messages"), {
-      userId: recipient,
-      recipient: userId,
+      userId: userId,
+      recipient: recipient,
       text: textValue,
+      date:new Date().toLocaleString()
     });
     handleInfo();
+  
   };
+
+
+
   useEffect(() => {
     handleInfo();
+   
   }, []);
 
   return (
@@ -62,7 +86,7 @@ export default function Chat() {
         <ul>
           {messagesArray.map((item, key) => (
             <>
-              <li className="messageIn"> {item.text}</li>
+              <li className="messageIn">{item.date} {item.recipient.id==user.uid?user.email:location.state.userEmail} {item.text}</li>
             </>
           ))}
           {/* 
