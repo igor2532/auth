@@ -7,7 +7,7 @@ export default function Signup() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password,setPassword] = useState('');
-    
+    const [isErrorForm, setIsErrorForm] = useState(false)
     const handleAddUser = async (uid) => {
         const docRefA = doc(collection(getFirestore(),'users'),uid); 
 
@@ -31,6 +31,7 @@ export default function Signup() {
             handleAddUser(user.uid);   
         }
            catch(error) {
+            setIsErrorForm(true)
                console.log(error)
            }
     }
@@ -64,6 +65,14 @@ export default function Signup() {
 
 
     </form>
+   
+   {
+    isErrorForm &&
+<div className='App_error_form'>
+<span>Ошибка, либо такой пользователь существует.</span>
+</div>
+   }
+
     <div className='App_other'>
     <div><NavLink to="/login">Login</NavLink></div>
     </div>

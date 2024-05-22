@@ -8,12 +8,16 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Protected from './components/Protected';
 import Home from './pages/Home';
+import UserPage from './pages/UserPage';
+import Chat from './pages/Chat';
 const token = localStorage.getItem('token');
 const router = createHashRouter(
   createRoutesFromElements(
   <Route path='/' element={  <App />}>
  <Route path='/signup' element={!token ?<Signup />:<Home/>}/>
  <Route path='/login' element={!token ?<Login />:<Home />}/>
+ <Route path='/user' element={<UserPage />}/>
+ <Route path='/chat' element={<Chat />}/>
  <Route path='/' element={<Protected />}>
  <Route path='/' index element={<Home />}/> 
  </Route>

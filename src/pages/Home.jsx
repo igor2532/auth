@@ -1,7 +1,7 @@
 import { signOut } from "firebase/auth";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { auth, database, storage } from "../firebase";
+import React, { useEffect, useMemo, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { auth,storage } from "../firebase";
 import {
   addDoc,
   collection,
@@ -12,23 +12,31 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { ref } from "firebase/database";
 import { getDownloadURL, ref as sRef } from "firebase/storage";
-import { uploadBytes, uploadBytesResumable } from "firebase/storage";
+import { uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
+import Header from "./Header";
 export default function Home() {
+  const [array, setArray] = useState([]);
+  const [arrayAll, setArrayAll] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const [array, setArray] = useState([]);
-  const [arrayAll, setArrayAll] = useState([]);
+  const [userEmailValue, setUserEmailValue] = useState('');
+
   const [isLoad, setIsLoad] = useState(false);
   const [valueTitle, setValueTitle] = useState("");
   const [valuePrice, setValuePrice] = useState("");
   const [valueImage, setValueImage] = useState("");
   const [imageUpload, setImageUpload] = useState(null);
+  const myArrAll = [];
+  
+  if (token) {
 
-  const categoryDocRef = doc(getFirestore(), "users", user.uid);
+    
+  }
+  const categoryDocRef = token?doc(getFirestore(), "users", user.uid):'';
+ 
   const handleInfo = async () => {
     const q = query(
       collection(getFirestore(), "products"),
@@ -41,21 +49,45 @@ export default function Home() {
     const querySnapshot = await getDocs(q);
     const querySnapshotAll = await getDocs(all);
     const myArr = [];
-    const myArrAll = [];
-    querySnapshot.forEach((doc) => {
-      myArr.push(doc.data());
-    });
-    querySnapshotAll.forEach((doc) => {
-      myArrAll.push(doc.data());
-    });
-    setArray(myArr);
-    setArrayAll(myArrAll);
-    setIsLoad(true)
+   
+   async function emailByIdSearch(uid) {
+   const getDocMy = await getDoc(doc(getFirestore(), 'users', uid))
+  .then((data)=>{
+    // console.log(data.data().email)
+      // setUserEmailValue(data.data().email);
+     return data
+     })
+     return getDocMy;
+   } 
+    const myPromise = new Promise((resolve,reject)=>{
+      querySnapshotAll.forEach((myDoc) => {
+        const obj =   myDoc.data();
+      emailByIdSearch(obj.userId.id).then((data)=>{
+        myArrAll.push({userEmail: data.data().email,...obj});
+      })
+      });
+      querySnapshot.forEach((doc) => {
+        myArr.push(doc.data());
+      });
+      resolve(myArrAll)
+    })
+    myPromise.then((resolve)=>{
+      setTimeout(()=>{
+        setArrayAll(myArrAll)
+        setArray(myArr);
+        setArrayAll(resolve);
+        setIsLoad(true)
+       },1000)  
+    })
   };
 
-  useEffect(() => {
-    handleInfo();
-  }, []);
+useEffect(()=>{
+    handleInfo().then(()=>{
+    })
+},[isLoad])
+
+   
+
 
   const addProduct = async (event) => {
     event.preventDefault();
@@ -81,26 +113,13 @@ export default function Home() {
     }
   };
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login"); 
+ 
 
-  };
   return (
     <>
       {token && (
         <>
-          <header className="App_header">
-            <div className="App_logo">
-              <img src="https://cdn-icons-png.flaticon.com/512/6078/6078201.png" />{" "}
-            </div>
-            <div className="App_functions">
-              <button>Ваш email:{user.email} </button>
-              <button onClick={handleLogout}>LogoutS</button>
-            </div>
-          </header>
+          <Header  />
           <div className="App_form_for_add">
             <form>
               <input
@@ -121,7 +140,7 @@ export default function Home() {
               <button onClick={addProduct}>Add product</button>
             </form>
           </div>
-          <h2 className="h2_app">Мои блюда</h2>
+          <h2 className="h2_app">Мои блюда </h2>
 
           {isLoad && (
             <div className="App_items">
@@ -139,7 +158,7 @@ export default function Home() {
 
           {!isLoad && (
             <div className="App_loading">
-              <span class="loader"></span>
+              <span className="loader"></span>
             </div>
           )}
           <h2 className="h2_app">Блюда других поваров</h2>
@@ -151,6 +170,8 @@ export default function Home() {
                   <div key={key}>
                     <img src={item.image} />
                     <span>{item.title}</span>
+                    <NavLink state={{ userId: item.userId.id, userEmail: item.userEmail }} to='user'><span>{item.userEmail}</span></NavLink>
+                    <span>cost: ${item.price}</span>
                   </div>
                 </>
               ))}
@@ -159,7 +180,7 @@ export default function Home() {
 
           {!isLoad && (
             <div className="App_loading">
-              <span class="loader"></span>
+              <span className="loader"></span>
             </div>
           )}
         </>

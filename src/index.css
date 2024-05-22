@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.App_error_form {
+  text-align: center;
+  padding-top: 30px;
+  color: red;
+  font-weight: bold;
+}

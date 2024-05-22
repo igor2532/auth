@@ -1,19 +1,48 @@
 .App_messages {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   gap: 13px;
   padding-top: 20px;
   padding-bottom: 20px;
+  text-align: center;
 }
 div.App {
   text-align: center;
 }
-
+form.App_form_message input {
+  font-size: 20px;
+}
 .App_items img,.App_items_all img {
   width: 174px;
   height: 126px;
 }
-
+.App_messages ul {
+  list-style: none;
+}
+.App_div_chat {
+  text-align: center;
+  padding-top: 40px;
+  font-weight: bold;
+}
+.App_div_chat a {
+  color: green;
+  font-weight: bold;
+  text-decoration: none;
+  border: solid 1px green;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+form.App_form_message button {
+  font-size: 20px;
+  background: none;
+  color: black;
+  font-weight: bold;
+  border: solid 1px black;
+  border-radius: 4px;
+  margin-left: 10px;
+}
 .App_items>div,.App_items_all>div {
   display: flex;
   flex-direction: column;
@@ -188,4 +217,9 @@ form.login-form input {
   div.App_items_all, div.App_items {
     max-width: 1000px;
     margin: 0 auto;
+}
+
+.App_userPage {
+  text-align: center;
+  padding-top: 40px;
 }
