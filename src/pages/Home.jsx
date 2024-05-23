@@ -129,7 +129,7 @@ useEffect(()=>{
                 type="number"
                 placeholder="Enter price"
               />
-              <input
+              <input className="App_inp_file"
                 type="file"
                 onChange={(e) => {
                   setImageUpload(e.target.files[0]);

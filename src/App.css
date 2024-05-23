@@ -11,6 +11,11 @@ div.App {
 }
 form.App_form_message input {
   font-size: 20px;
+  height: 52px;
+  width: 100%;
+  border-radius: 10px;
+  border: solid 1px black;
+  padding-left: 10px;
 }
 .App_items img,.App_items_all img {
   width: 174px;
@@ -49,7 +54,10 @@ form.App_form_message button {
   justify-content: space-around;
   align-items: center;
 }
-
+.App_messages ul {
+  overflow-y: scroll;
+  max-height: 60vh;
+}
 .App_items,.App_items_all {
   display: grid;
   padding-top: 30px;
@@ -221,5 +229,89 @@ form.login-form input {
 
 .App_userPage {
   text-align: center;
-  padding-top: 40px;
+  width: 300px;
+  margin: 0 auto;
+  background: #17cf0f;
+  margin-top: 23px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-weight: bold;
+  border-radius: 18px;
+  color: white;
 }
+
+/* messages  */
+li.messageIn {
+  text-align: right;
+}
+
+li.messageOut {
+  text-align: left;
+}
+.App_messages {
+  max-width: 704px;
+  margin: 0 auto;
+}
+li.messageOut .App_li_message {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+li.messageIn .App_li_message {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.App_li_message_container {
+  background: #e3fee0;
+  width: 210px;
+}
+
+.App_li_message_container {
+  background: #e3fee0;
+  width: 210px;
+  border-radius: 18px;
+  padding: 19px;
+}
+.App_userPage:hover {
+  background: #3e7d18;
+  cursor: grab;
+}
+.App_messages ul {
+  overflow-y: scroll;
+  max-height: 60vh;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+ul.App_contextMenu {
+  background: whitesmoke;
+  list-style: none;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: black;
+}
+ul.App_contextMenu li:hover {
+  background: #00000082;
+  cursor: grab;
+  color: white;
+}
+input.App_inp_file {
+  height: 32px !important;
+  font-size: 17px !important;
+}
+ul.App_contextMenu li {
+width: 100px;
+}
+/* messages */
+
+/* scroll */
+::-webkit-scrollbar {
+  width: 5px;
+  background: #24252347;
+ 
+}
+
+/* scroll */
