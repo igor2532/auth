@@ -315,3 +315,32 @@ width: 100px;
 }
 
 /* scroll */
+
+
+.App_form_button_add {
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+.App_form_button_add button {
+  font-size: 26px;
+  border: solid 1px black;
+  border-radius: 12px;
+  width: 300px;
+  padding-right: 30px;
+  padding-left: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: #ffffff;
+  color: black;
+}
+
+a.App_href_author {
+  text-decoration: none;
+  background: #009611;
+  color: white;
+  padding: 2px 14px 2px 14px;
+  font-size: 14px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}

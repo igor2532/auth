@@ -29,6 +29,7 @@ export default function Home() {
   const [valuePrice, setValuePrice] = useState("");
   const [valueImage, setValueImage] = useState("");
   const [imageUpload, setImageUpload] = useState(null);
+  const [isFormAdd, setIsFormAdd] = useState(false);
   const myArrAll = [];
   
   if (token) {
@@ -102,6 +103,7 @@ useEffect(()=>{
               price: valuePrice,
               image: url,
               userId: categoryDocRef,
+              date:new Date().toLocaleString()
             }).then(() => {
               handleInfo();
             });
@@ -110,15 +112,23 @@ useEffect(()=>{
       );
     }
   };
+function howDate(item) {
+  const selectedText = item.date
+  console.log(item)
+const splArr = selectedText.split(',');
+return splArr[0];
 
- 
+ }
 
   return (
     <>
       {token && (
         <>
           <Header  />
-          <div className="App_form_for_add">
+          {
+            isFormAdd &&
+             <> 
+                 <div className="App_form_for_add">
             <form>
               <input
                 onChange={(e) => setValueTitle(e.target.value)}
@@ -138,6 +148,13 @@ useEffect(()=>{
               <button onClick={addProduct}>Add product</button>
             </form>
           </div>
+              </>
+                  }
+          <div className="App_form_button_add">
+            <button onClick={()=>{setIsFormAdd(!isFormAdd)}}>{isFormAdd?'Close form':'Add recipe'}</button>
+          </div>
+
+      
           <h2 className="h2_app">Мои блюда </h2>
 
           {isLoad && (
@@ -168,8 +185,9 @@ useEffect(()=>{
                   <div key={key}>
                     <img src={item.image} />
                     <span>{item.title}</span>
-                    <NavLink state={{ userId: item.userId.id, userEmail: item.userEmail }} to='user'><span>{item.userEmail}</span></NavLink>
+                    <NavLink state={{ userId: item.userId.id, userEmail: item.userEmail }} className='App_href_author' to='user'><span>{item.userEmail}</span></NavLink>
                     <span>cost: ${item.price}</span>
+                    <span>date: {howDate(item)}</span>
                   </div>
                 </>
               ))}

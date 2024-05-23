@@ -97,31 +97,26 @@ handleInfo();
 
 
   const sendMessage = async (event) => {
+
+
     event.preventDefault();
-
-    // addDoc(collection(getFirestore(), "messages"), {
-      
-    //   userId: userId,
-    //   recipient: recipient,
-    //   text: textValue,
-    //   deleted: false,
-    //   date:new Date().toLocaleString()
-    // });
-    const myUi = messagesArray.length+''+v4();
-    const docRefA = doc(collection(getFirestore(),'messages'),myUi); 
-
-    const newDocRefA = await setDoc(docRefA,{
-      id: myUi,
-         userId: userId,
-      recipient: recipient,
-      text: textValue,
-      deleted: false,
-      date:new Date().toLocaleString()
-       });
-
-    handleInfo()
-    setTextValue('')
+    if(textValue !== '') {
+      const myUi = messagesArray.length+''+v4();
+      const docRefA = doc(collection(getFirestore(),'messages'),myUi); 
+      const newDocRefA = await setDoc(docRefA,{
+        id: myUi,
+           userId: userId,
+        recipient: recipient,
+        text: textValue,
+        deleted: false,
+        date:new Date().toLocaleString()
+         });
+      handleInfo()
+      setTextValue('')
+    } 
+   
   
+
   };
 
 
