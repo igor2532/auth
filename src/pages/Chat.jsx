@@ -56,34 +56,20 @@ handleInfo();
     const q = query(
       collection(getFirestore(), "messages"),
       orderBy('date','asc'),
-      //  or(
-      //    where('recipient', '==',recipient, '&&','userId', '==',userId),
-      //   where('recipient', '==',userId, '&&','userId', '==',recipient)
-      //  ), 
       where('recipient', 'in' ,[userId, recipient], 'AND','userId', 'in',[recipient,userId], 'AND' , 'deleted', '==', false),
-
-    // where('recipient', '==',recipient, '&&','userId', '==',userId),
-      
     );
     const querySnapshot = await getDocs(q);
     // console.log(querySnapshot)
     const myMessages = [];
     querySnapshot.forEach((myDoc) => {
       const obj = myDoc.data();
-    
         myMessages.push({userEmail: location.state.userEmail, ...obj });
-     
-     
-    //   console.log(obj);
     });
 
     console.log(messagesArray.length==myMessages.length)
     if(messagesArray.length<myMessages.length) {
-       // 
     }
     else {
-        // console.log(messagesArray.length==myMessages.length);
-        // console.log(messagesArray.length+" "+myMessages.length);
         const app_ul_id =  document.getElementById('App_messages_ul');
         app_ul_id.scrollTo(0,2000000000)
     }

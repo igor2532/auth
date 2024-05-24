@@ -344,3 +344,17 @@ a.App_href_author {
   margin-top: 4px;
   margin-bottom: 4px;
 }
+
+button.App_like_button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  display: flex;
+  width: 44px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+ul#App_messages_ul {
+  min-height: 50vh;
+}
