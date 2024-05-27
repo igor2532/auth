@@ -1,10 +1,11 @@
 import { signOut } from "firebase/auth";
 import React, { useEffect, useMemo, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { auth, storage } from "../firebase";
+import { NavLink, resolvePath, useNavigate } from "react-router-dom";
+import { auth, database, storage } from "../firebase";
 import {
   addDoc,
   collection,
+  collectionGroup,
   deleteDoc,
   doc,
   getCountFromServer,
@@ -19,7 +20,8 @@ import { getDownloadURL, ref as sRef } from "firebase/storage";
 import { uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import Header from "./Header";
-import { FcLike,FcDislike  } from "react-icons/fc";
+import { FcLike, FcDislike } from "react-icons/fc";
+// import  firebase from "firebase/compat/app";
 
 export default function Home() {
   const [array, setArray] = useState([]);
@@ -35,137 +37,132 @@ export default function Home() {
   const [valueImage, setValueImage] = useState("");
   const [imageUpload, setImageUpload] = useState(null);
   const [isFormAdd, setIsFormAdd] = useState(false);
-  const [countLikes, setCountLikes] = useState(0)
+  const [countLikes, setCountLikes] = useState(0);
   const myArrAll = [];
- 
+  const [isLoadingLike, setIsLoadingLike] = useState(true);
 
   const myUserRef = token ? doc(getFirestore(), "users", user.uid) : "";
 
   const handleInfo = async () => {
-    const q = query(
-      collection(getFirestore(), "products"),
-      where("userId", "==", myUserRef)
-    );
-    const all = query(
-      collection(getFirestore(), "products"),
-      where("userId", "!=", myUserRef)
-    );
-    const querySnapshot = await getDocs(q);
-    const querySnapshotAll = await getDocs(all);
+    const myProducts = query(collectionGroup(getFirestore(), "Products"));
+    const allProducts = query(collectionGroup(getFirestore(), "Products"));
+    const querySnapshotAll = await getDocs(allProducts);
     const myArr = [];
+    const myDocEach = new Promise((resolve, reject) => {
+      querySnapshotAll.forEach(async (myDoc) => {
+        const obj = await myDoc.data();
 
-    async function emailByIdSearch(uid) {
-      const getDocMy = await getDoc(doc(getFirestore(), "users", uid)).then(
-        (data) => {
-          return data;
+        const likes = await query(
+          collection(
+            getFirestore(),
+            `/users/${obj.userId}/Products/${obj.id}/likes`
+          )
+        );
+        const likesMy = await query(
+          collection(
+            getFirestore(),
+            `/users/${obj.userId}/Products/${obj.id}/likes`
+          ),
+          where("userId", "==", myUserRef.id)
+        );
+        const emailUserDoc = await getDoc(doc(getFirestore(), "users", obj.userId))
+       
+        const likesInt = await getDocs(likes)
+          .then((data) => {
+            return data.docs.length;
+          })
+          .then(async (data1) => {
+            const likesMyInt = await getDocs(likesMy).then((data) => {
+              myArrAll.push({
+                ...obj,
+                likes: data1,
+                likesMy: data.docs.length,
+                userEmail: emailUserDoc.data().email,
+              });
+            });
+          });
+        const lites = async () => {
+          setIsLoad(true);
+          setArrayAll(myArrAll);
+        };
+        lites();
+      });
+    });
+  };
+
+  const handleLike = async (obj) => {
+    if (obj.likesMy == 0) {
+      setIsLoadingLike(false)
+      const newArray = arrayAll;
+      await newArray.map((item, key) => {
+        if (item.id == obj.id) {
+          item.likes = item.likes + 1;
+          item.likesMy = item.likesMy + 1;
+          item.key = key;
+        } else {
+          item = item;
         }
+      });
+      setArrayAll(newArray);
+      
+      const myUi = "like" + v4();
+      const docRefA = doc(
+        collection(
+          getFirestore(),
+          `users/${obj.userId}/Products/${obj.id}/likes`
+        ),
+        myUi
       );
-      return getDocMy;
-    }
-    const myPromise = new Promise((resolve, reject) => {
-      querySnapshotAll.forEach((myDoc) => {
-        const obj = myDoc.data();
-        emailByIdSearch(obj.userId.id).then(async (data,key) => {
+      const newDocRefA = await setDoc(docRefA, {
+        id: myUi,
+        userId: myUserRef.id,
+        productId: obj.id,
+        date: new Date().toLocaleString(),
+      }).then(()=>{
+       setTimeout(()=>{setIsLoadingLike(true)},1)
+      });
+    } else if (obj.likesMy > 0) {
+      const newArray = arrayAll;
+      setIsLoadingLike(false)
+       newArray.map((item, key) => {
+        if (item.id == obj.id) {
+          item.likes = item.likes - 1;
+          item.likesMy = item.likesMy - 1;
+          item.key = key;
+        } else {
+          item = item;
+        }
+      });
+      setArrayAll(newArray);
      
-          
-         
-            const promiseSnap = new Promise(async(resolve,reject)=>{
-              const likesAll = await howLikesInProduct(obj);
-              const myLikesValue = await howMyLikesInProduct(obj);
-              resolve({likesAll,myLikesValue})
-            })
-             promiseSnap.then(({likesAll,myLikesValue})=>{
-              myArrAll.push({likesMy:myLikesValue.docs.length,likes:likesAll,key:key, userEmail: data.data().email, ...obj });
-             })
-        });
+      const q = query(
+        collection(
+          getFirestore(),
+          `users/${obj.userId}/Products/${obj.id}/likes`
+        ),
+        where("userId", "==", myUserRef.id)
+      );
+      const querySnapshot = await getDocs(q);
+      await deleteDoc(
+        doc(
+          getFirestore(),
+          `users/${obj.userId}/Products/${obj.id}/likes`,
+          querySnapshot.docs[0].data().id
+        )
+      ).then(()=>{
+        setTimeout(()=>{setIsLoadingLike(true)},1)
       });
-      querySnapshot.forEach((doc,key) => {
-        const obj =doc.data();
-        myArr.push({key:key, ...obj});
-      });
-      resolve(myArrAll);
-    });
-    myPromise.then((resolve) => {
-      setTimeout(() => {
-        setArrayAll(myArrAll);
-        setArray(myArr);
-        setArrayAll(resolve);
-        setIsLoad(true);
-      },1500);
-    });
+      // handleInfo();
+    }
   };
 
-  useEffect(() => {
-    handleInfo().then(() => {});
-  }, [isLoad]);
-
-
-   async function howLikesInProduct(obj)  {
-      const querySnapshot = await getDocs(query(
-        collection(getFirestore(), "likes"),
-        where('productId', '==' ,obj.id)));
-       return querySnapshot.docs.length
-}
-
-
-const handleRefreshLikes = async () =>{
-
-  let myLikeArrAll = arrayAll;
-
-  myLikeArrAll.map( async (item,key)=>{
-   
-      const likesAll = await howLikesInProduct(item);
-      const myLikesValue = await howMyLikesInProduct(item);
-
-      item.likesMy = myLikesValue.docs.length;
-      item.likes = likesAll;
-      key = key;
-    return item;
-
-    
-});
- 
-   
-    setArrayAll(myLikeArrAll);
-    console.log(arrayAll)
+  useMemo(() => {
     handleInfo();
-}
+  }, [isLoad]);
+  // useEffect(() => {
+  //   handleInfo()
+  // }, [isLoad]);
 
-
-function howMyLikesInProduct(obj)  {
-  const q = query(
-    collection(getFirestore(), "likes"),
-    where('userId', '==',myUserRef.id),where('productId', '==' ,obj.id, ),
-  );
-   const querySnapshot =  getDocs(q);
-return querySnapshot;
-  }
-
-
-const handleLike =  async (item) => {
-if (item.likesMy==0) {
-  const myUi =  "" + v4();
-  const docRefA = doc(collection(getFirestore(), "likes"), myUi);
-  const newDocRefA = await setDoc(docRefA, {
-    id: myUi,
-    userId: myUserRef.id,
-    productId: item.id,
-    date: new Date().toLocaleString(),
-  }).then(()=>{
-    handleRefreshLikes();
-  });
-}
-else {
-const q = query(
-collection(getFirestore(), "likes"),
-  where('userId', '==',myUserRef.id),where('productId', '==' ,item.id, ),
-);
- const querySnapshot = await getDocs(q);
-await deleteDoc(doc(getFirestore(),'likes',querySnapshot.docs[0].data().id));
-handleRefreshLikes();
-}
-
-  };
   const addProduct = async (event) => {
     event.preventDefault();
     if (imageUpload !== null) {
@@ -176,15 +173,19 @@ handleRefreshLikes();
         (snapshot) => {
           getDownloadURL(snapshot.ref).then(async (url) => {
             const myUi = arrayAll.length + "" + v4();
-            const docRefA = doc(collection(getFirestore(), "products"), myUi);
+            const docRefA = doc(
+              collection(getFirestore(), `users/${myUserRef.id}/Products`),
+              myUi
+            );
+
             const newDocRefA = await setDoc(docRefA, {
               id: myUi,
               title: valueTitle,
               price: valuePrice,
               image: url,
-              userId: myUserRef,
+              userId: myUserRef.id,
               date: new Date().toLocaleString(),
-            }).then(()=>{
+            }).then(() => {
               handleInfo();
             });
           });
@@ -259,7 +260,7 @@ handleRefreshLikes();
               <span className="loader"></span>
             </div>
           )}
-          <button onClick={handleRefreshLikes}>refresh</button>
+          {/* <button onClick={handleRefreshLikes}>refresh</button> */}
           <h2 className="h2_app">Блюда других поваров</h2>
 
           {isLoad && (
@@ -267,22 +268,44 @@ handleRefreshLikes();
               {arrayAll.map((item, key) => (
                 <>
                   <div key={key}>
-                   <NavLink to='product'
-                    state={{
-                      object: item.title,
-                    }}
-                   >
-                   <img src={item.image} />
-                   </NavLink>
-                    
+                    <NavLink
+                      to="product"
+                      state={{
+                        object: item,
+                      }}
+                    >
+                      <img src={item.image} />
+                    </NavLink>
+
                     <span>{item.title}</span>
-                    <button className="App_like_button"  onClick={()=>handleLike(item)}>
-                      {(item.likesMy==0) && <> <FcLike /></>}
-                      {(item.likesMy>0) && <> <FcDislike /></>}
-                     {item.likes} </button>
+                    {isLoadingLike && (
+                      <button
+                        className="App_like_button"
+                        onClick={() => handleLike(item)}
+                      >
+                        {item.likesMy == 0 && (
+                          <>
+                            {" "}
+                            <FcLike />
+                          </>
+                        )}
+                        {item.likesMy > 0 && (
+                          <>
+                            {" "}
+                            <FcDislike />
+                          </>
+                        )}
+                        {item.likes}{" "}
+                      </button>
+                    )}
+                    {!isLoadingLike && (
+                      <div className="App_loading">
+                        <span className="loader"></span>
+                      </div>
+                    )}
                     <NavLink
                       state={{
-                        userId: item.userId.id,
+                        userId: item.userId,
                         userEmail: item.userEmail,
                       }}
                       className="App_href_author"

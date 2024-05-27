@@ -344,7 +344,13 @@ a.App_href_author {
   margin-top: 4px;
   margin-bottom: 4px;
 }
-
+.App_item_preview img {
+  width: 300px;
+}
+.App_item_preview {
+  margin-top: 23px;
+  text-align: center;
+}
 button.App_like_button {
   background: none;
   border: none;

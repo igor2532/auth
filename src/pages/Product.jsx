@@ -4,10 +4,16 @@ import Header from './Header';
 
 export default function Product() {
   const location = useLocation();
+  const {title,userEmail,image,price} = location.state.object
   return (
     <>
        <Header />
-    <div>{location.state.object}</div>
+<div className='App_item_preview'>
+    <div><img src={image}/></div>
+    <div>{title}</div>
+    <div>{userEmail}</div>
+    <div>${price}</div>
+</div>
     </>
  
   )
