@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import UserPage from './pages/UserPage';
 import Chat from './pages/Chat';
 import Product from './pages/Product';
+import Game from './pages/Game';
 const token = localStorage.getItem('token');
 const router = createHashRouter(
   createRoutesFromElements(
@@ -19,6 +20,7 @@ const router = createHashRouter(
  <Route path='/login' element={!token ?<Login />:<Home />}/>
  <Route path='/user' element={<UserPage />}/>
  <Route path='/chat' element={<Chat />}/>
+ <Route path='/game' element={<Game />}/>
  <Route path='/product' element={<Product />}/>
  <Route path='/' element={<Protected />}>
  <Route path='/' index element={<Home />}/> 
